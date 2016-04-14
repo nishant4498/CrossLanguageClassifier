@@ -16,6 +16,7 @@ business={}
 hindi_stop_words=[]
 hindi_model=defaultdict(dict)
 punctuations = []
+unique_words = []
 
 stop_words_path='F:/workspace/python/NLP/ResearchProject/train_data/histpwords.txt'
 
@@ -31,14 +32,10 @@ def printMap(tag,filename):
         json.dump(tag,fopen)
 
 def replace_punctuations(word):
-    print word
     truncated_word = word
     for i in range (0,len(word)):
         if word[i] in punctuations:
             truncated_word =  re.sub(word[i] , "", truncated_word)
-            print word[i]
-    #if truncated_word =='':
-    #    truncated_word = word
     return truncated_word
 
 def populate_puntuation_list():
@@ -51,7 +48,7 @@ def build_map(arg1):
     temp_map={}
     for root, dirs, files in os.walk(arg1):
         for file in files:
-            print file
+            #print file
             if(file!='.DS_Store'):
                 path=os.path.join(root, file)
                 with open (path,'r') as fopen:
@@ -71,12 +68,15 @@ def build_map(arg1):
                                         continue
                                     else:
                                         truncated_word = replace_punctuations(word.decode("utf-8"))
-                                        if(word.decode("utf-8") != truncated_word):
-                                            print word.decode("utf-8") + truncated_word
+                                        #if(word.decode("utf-8") != truncated_word):
+                                            #print word.decode("utf-8") + truncated_word
                                         if truncated_word not in temp_map:
                                             temp_map[truncated_word] = 1
                                         else:
                                             temp_map[truncated_word] += 1
+                                        if truncated_word not in unique_words:
+                                            unique_words.append(truncated_word)
+                                            print truncated_word
     return temp_map
 
 populate_puntuation_list()
@@ -94,5 +94,7 @@ hindi_model['entertainment']=entertainment
 hindi_model['politics']=politics
 hindi_model['sports']=sports
 hindi_model['business']=business
+print unique_words
+hindi_model['unique_word_count'] = len(unique_words)
 
 printMap(hindi_model,'hindi_model.txt')
