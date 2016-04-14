@@ -18,7 +18,7 @@ hindi_model=defaultdict(dict)
 punctuations = []
 unique_words = []
 
-stop_words_path='F:/workspace/python/NLP/ResearchProject/train_data/histpwords.txt'
+stop_words_path='/Users/anirbanmishra/Downloads/CrossLanguageClassifier-master/ResearchProject/train_data/histpwords.txt'
 
 with open(stop_words_path,'r') as fopen:
     for line in fopen:
