@@ -50,7 +50,7 @@ def build_map(arg1):
     temp_map={}
     for root, dirs, files in os.walk(arg1):
         for file in files:
-            print file
+            #print file
             if(file!='.DS_Store'):
                 path=os.path.join(root, file)
                 with open (path,'r') as fopen:
@@ -61,20 +61,24 @@ def build_map(arg1):
                             word_list=line.split()
                             for word in word_list:
                                 flag=False
+                                truncated_word = replace_punctuations(word.decode("utf-8"))
                                 for stop_word in hindi_stop_words:
-                                    if word.decode('utf-8')==stop_word.decode('utf-8'):
+                                    if truncated_word == stop_word.decode('utf-8'):
+                                        print truncated_word
                                         flag=True
                                 if(flag==False):
-                                    if word.isdigit():
+                                    print truncated_word+'dup'
+                                    if truncated_word.isdigit():
                                         continue
                                     else:
-                                        truncated_word = replace_punctuations(word.decode("utf-8"))
+
                                         if truncated_word not in temp_map:
                                             temp_map[truncated_word] = 1
                                         else:
                                             temp_map[truncated_word] += 1
                                         if truncated_word not in unique_words:
                                             unique_words.append(truncated_word)
+
     return temp_map
 
 populate_puntuation_list()
