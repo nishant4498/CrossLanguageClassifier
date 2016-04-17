@@ -46,11 +46,17 @@ def populate_puntuation_list():
             global punctuations
             punctuations= line.decode("utf-8-sig").strip().split(" ")
 
+def is_filter_word(words):
+    for word in hindi_stop_words:
+        if words == word.decode('utf-8') or words.isdigit():
+            return True
+    return False
+
 def build_map(arg1):
     temp_map={}
     for root, dirs, files in os.walk(arg1):
         for file in files:
-            #print file
+            print file
             if(file!='.DS_Store'):
                 path=os.path.join(root, file)
                 with open (path,'r') as fopen:
@@ -60,24 +66,14 @@ def build_map(arg1):
                         else:
                             word_list=line.split()
                             for word in word_list:
-                                flag=False
                                 truncated_word = replace_punctuations(word.decode("utf-8"))
-                                for stop_word in hindi_stop_words:
-                                    if truncated_word == stop_word.decode('utf-8'):
-                                        print truncated_word
-                                        flag=True
-                                if(flag==False):
-                                    print truncated_word+'dup'
-                                    if truncated_word.isdigit():
-                                        continue
+                                if not is_filter_word(truncated_word):
+                                    if truncated_word not in temp_map:
+                                        temp_map[truncated_word] = 1
                                     else:
-
-                                        if truncated_word not in temp_map:
-                                            temp_map[truncated_word] = 1
-                                        else:
-                                            temp_map[truncated_word] += 1
-                                        if truncated_word not in unique_words:
-                                            unique_words.append(truncated_word)
+                                        temp_map[truncated_word] += 1
+                                    if truncated_word not in unique_words:
+                                        unique_words.append(truncated_word)
 
     return temp_map
 

@@ -1,6 +1,6 @@
 import json
 classified_map={}
-with open("Classified Marathi News.txt",'r') as fileopen:
+with open("../output/Classified Marathi News.txt",'r') as fileopen:
     classified_map=json.load(fileopen)
 
 correct_count=0
