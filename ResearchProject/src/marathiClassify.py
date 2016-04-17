@@ -26,8 +26,8 @@ marathi_business_prob = 0
 marathi_sports_prob = 0
 marathi_entertainment_prob = 0
 
-if os.path.exists('Classified Marathi News.txt'):
-    os.remove('Classified Marathi News.txt')
+if os.path.exists('../output/Classified Marathi News.txt'):
+    os.remove('../output/Classified Marathi News.txt')
 
 def clear_variables():
     global marathi_entertainment_prob, marathi_politics_prob, marathi_business_prob, marathi_sports_prob
@@ -214,7 +214,7 @@ def create_output_map(path,news_category):
 
 def write_output_to_file():
     global news_classify
-    with open("Classified Marathi News.txt",'a+') as fileopen:
+    with open("../output/Classified Marathi News.txt",'a+') as fileopen:
         json.dump(news_classify,fileopen)
 
 def classify(test_data_path):
