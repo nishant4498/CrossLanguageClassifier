@@ -68,6 +68,14 @@ def replace_punctuations(word):
     for i in range (0,len(word)):
         if word[i] in punctuations:
             truncated_word  =   re.sub(word[i] , "", truncated_word)
+    if '?' in word[i]:
+        truncated_word=truncated_word.replace("?","")
+    if '(' in word[i]:
+        truncated_word=truncated_word.replace("(","")
+    if ')' in word[i]:
+        truncated_word=truncated_word.replace(")","")
+    if '|' in word[i]:
+        truncated_word=truncated_word.replace("|","")
     return truncated_word
 
 def initialize_model():
