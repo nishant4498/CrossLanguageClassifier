@@ -29,5 +29,5 @@ with open(dictionary_text_file,'r') as f:
         truncated_hindi_word=replace_punctuations(word[3].decode('utf-8'))
         dict[truncated_marathi_word]=truncated_hindi_word
 
-with open ("../model/Dictionary.json",'a+') as fopen:
+with open ("../model/Dictionary.txt",'a+') as fopen:
     json.dump(dict,fopen)
