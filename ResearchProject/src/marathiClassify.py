@@ -26,8 +26,8 @@ marathi_business_prob = 0
 marathi_sports_prob = 0
 marathi_entertainment_prob = 0
 
-if os.path.exists('Classified Marathi News.txt'):
-    os.remove('Classified Marathi News.txt')
+if os.path.exists('../output/Classified Marathi News.txt'):
+    os.remove('../output/Classified Marathi News.txt')
 
 def clear_variables():
     global marathi_entertainment_prob, marathi_politics_prob, marathi_business_prob, marathi_sports_prob
@@ -47,7 +47,7 @@ def populate_hindi_model():
         hindi_model = json.load(fileopen)
 
 def poulate_dictionary():
-    with open("../model/Dictionary.json",'r') as dictopen:
+    with open("../model/Dictionary.txt",'r') as dictopen:
         global hindi_marathi_dict
         hindi_marathi_dict = json.load(dictopen)
 
@@ -68,6 +68,14 @@ def replace_punctuations(word):
     for i in range (0,len(word)):
         if word[i] in punctuations:
             truncated_word  =   re.sub(word[i] , "", truncated_word)
+        if '?' in word[i]:
+            truncated_word=truncated_word.replace("?","")
+        if '(' in word[i]:
+            truncated_word=truncated_word.replace("(","")
+        if ')' in word[i]:
+            truncated_word=truncated_word.replace(")","")
+        if '|' in word[i]:
+            truncated_word=truncated_word.replace("|","")
     return truncated_word
 
 def initialize_model():
@@ -214,8 +222,9 @@ def create_output_map(path,news_category):
 
 def write_output_to_file():
     global news_classify
-    with open("Classified Marathi News.txt",'a+') as fileopen:
-        json.dump(news_classify,fileopen)
+    with open("../output/Classified Marathi News.txt",'a+') as fileopen:
+        for path, classification in news_classify.iteritems():
+            fileopen.write(path+','+path.split('/')[2].split('\\')[0]+','+classification+'\n')
 
 def classify(test_data_path):
     for root, dirs, files in os.walk(test_data_path):

@@ -38,6 +38,14 @@ def replace_punctuations(word):
     for i in range (0,len(word)):
         if word[i] in punctuations:
             truncated_word =  re.sub(word[i] , "", truncated_word)
+        if '?' in word[i]:
+            truncated_word=truncated_word.replace("?","")
+        if '(' in word[i]:
+            truncated_word=truncated_word.replace("(","")
+        if ')' in word[i]:
+            truncated_word=truncated_word.replace(")","")
+        if '|' in word[i]:
+            truncated_word=truncated_word.replace("|","")
     return truncated_word
 
 def populate_puntuation_list():
@@ -46,11 +54,21 @@ def populate_puntuation_list():
             global punctuations
             punctuations= line.decode("utf-8-sig").strip().split(" ")
 
+def is_filter_word(words):
+    for word in hindi_stop_words:
+        if words == word.decode('utf-8') or words.isdigit():
+            return True
+    if re.search('[a-zA-Z]', words):
+        return True
+    if any(c.isdigit() for c in words):
+        return True
+    return False
+
 def build_map(arg1):
     temp_map={}
     for root, dirs, files in os.walk(arg1):
         for file in files:
-            #print file
+            print file
             if(file!='.DS_Store'):
                 path=os.path.join(root, file)
                 with open (path,'r') as fopen:
@@ -60,25 +78,16 @@ def build_map(arg1):
                         else:
                             word_list=line.split()
                             for word in word_list:
-                                flag=False
                                 truncated_word = replace_punctuations(word.decode("utf-8"))
-                                for stop_word in hindi_stop_words:
-                                    if truncated_word == stop_word.decode('utf-8'):
-                                        print truncated_word
-                                        flag=True
-                                if(flag==False):
-                                    print truncated_word+'dup'
-                                    if truncated_word.isdigit():
-                                        continue
+                                if not is_filter_word(truncated_word):
+                                    if truncated_word not in temp_map:
+                                        temp_map[truncated_word] = 1
                                     else:
+                                        temp_map[truncated_word] += 1
+                                if truncated_word not in unique_words:
+                                    unique_words.append(truncated_word)
 
-                                        if truncated_word not in temp_map:
-                                            temp_map[truncated_word] = 1
-                                        else:
-                                            temp_map[truncated_word] += 1
-                                        if truncated_word not in unique_words:
-                                            unique_words.append(truncated_word)
-
+    temp_map = dict( [(k,v) for k,v in temp_map.items() if len(k)>0])
     return temp_map
 
 populate_puntuation_list()
@@ -96,6 +105,7 @@ hindi_model['entertainment']=entertainment
 hindi_model['politics']=politics
 hindi_model['sports']=sports
 hindi_model['business']=business
+hindi_model['unique_word_list']=unique_words
 hindi_model['unique_word_count'] = len(unique_words)
 
 writeMapToFile(hindi_model,'../model/hindi_model.txt')
