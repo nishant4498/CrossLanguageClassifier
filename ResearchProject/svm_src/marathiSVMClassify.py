@@ -59,18 +59,13 @@ def get_start_index_for_cluster(word):
     else:
         return word_length - 7
 
-
-   
-       
-
-
 def getUniqueWords():    
     with open(unique_words_path,'r') as fileopen:
         hindi_model = json.load(fileopen)
         uniqueWordList = hindi_model['unique_word_list']
         return uniqueWordList
 
-#Execution of code============================================
+#Execution of code
 
 uniqueWordList=getUniqueWords()
 
@@ -89,7 +84,7 @@ for key,value in hindi_marathi_dict.iteritems():
     ourDictionary[key]=value
     
  
- 
+# path  
 def classify(path):    
     for root, dirs, files in os.walk(path):
             for f1 in files:
@@ -164,9 +159,11 @@ def classify(path):
                         
                         ultimateTestArray[filee]=arrayOfFile  
 print "Read test data"
-finalArray=[]
-fileArray = []   
-classArray = []                  
+finalArray=[] #contains test data vectors
+fileArray = [] #contains list of test files in order as read 
+classArray = [] #contains list of class labels of test files in order as read
+
+#Read business test data files
 classify('../test_data/Business')                           
 for f in sorted(ultimateTestArray.keys()):
     fileArray.append(f)
@@ -175,6 +172,7 @@ for f in sorted(ultimateTestArray.keys()):
 print "Business read"
 #print finalArray
 #print len(finalArray)
+
 ultimateTestArray={}
 classify('../test_data/Entertainment')
 for f in sorted(ultimateTestArray.keys()):
@@ -213,15 +211,16 @@ for u in finalArray:
     print len(u)                                 
 '''
     
-print "svm model read from file"                                
+print "Svm model read from file"                                
 with open('../model/svmmodel.txt', 'r') as f:
     lin_clf = pickle.load(f)
 
-print "predict result"
+print "Predict result"
 result = lin_clf.predict(finalArray)
 
-op_file = open("svmoutput.txt", "w")
+op_file = open("../output/Classified_Marathi_News_SVM.txt", "w")
 
+print "Write svm classification output to file"
 for x in range(0,len(fileArray)):
     print fileArray[x],",",classArray[x],",",result[x]   
-    op_file.write(fileArray[x]+","+classArray[x]+","+result[x])
+    op_file.write(fileArray[x]+","+classArray[x]+","+result[x]+"\n")
