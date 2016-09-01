@@ -7,6 +7,7 @@ import os
 import math
 
 hindi_marathi_dict = {}
+
 entertainment_map = {}
 politics_map = {}
 sports_map = {}
